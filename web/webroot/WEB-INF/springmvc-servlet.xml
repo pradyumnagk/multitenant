@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans default-autowire="byName" xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+           http://cxf.apache.org/jaxws
+           http://cxf.apache.org/schemas/jaxws.xsd
+           http://www.springframework.org/schema/security 
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+	<!-- Tenant scope -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="tenant" value="de.hybris.platform.spring.TenantScope"/>
+			</map>
+		</property>
+	</bean>
+
+
+	<!-- Localization -->
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>/WEB-INF/messages</value>
+				<value>/WEB-INF/errors</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+	<!-- Abstract Interceptor (will only invoke interceptors with the given action names (bean names) -->
+	<bean id="AbstractInterceptor" abstract="true" class="com.clients.web.interceptors.AbstractInterceptor" scope="tenant">
+		<property name="actionNames">
+			<list>
+				<value>content</value>
+				<value>catalog</value>
+				<value>category</value>
+				<value>product</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Interceptor for changing the locale -->
+	<bean id="localeChangeInterceptor" class="com.clients.web.interceptors.LocaleChangeInterceptor" parent="AbstractInterceptor" scope="tenant"/>
+
+	<!-- Interceptor for changing the currency -->
+	<bean id="currencyChangeInterceptor" class="com.clients.web.interceptors.CurrencyChangeInterceptor" parent="AbstractInterceptor" scope="tenant"/>
+
+	<!-- Interceptor for solr facet search field -->
+	<bean id="solrFacetSearchInterceptor" class="com.clients.web.interceptors.SolrFacetSearchInterceptor" parent="AbstractInterceptor" scope="tenant"/>
+
+
+	<!--  HandlerMapping -->
+	<bean class="com.clients.web.mappings.PrefixBasedBeanNameHandlerMapping" scope="tenant">
+		<property name="interceptors">
+			<list>
+				<ref bean="localeChangeInterceptor" />
+				<ref bean="currencyChangeInterceptor" />
+				<ref bean="solrFacetSearchInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- ############################################################ -->
+	<!-- Non CMS-elements controllers -->
+
+	<bean id="LanguagesController" class="com.clients.web.controllers.components.LanguagesController" scope="tenant">
+		<property name="view" value="/components/languagesComponent.jsp" />
+	</bean>
+
+	<bean id="CurrenciesController" class="com.clients.web.controllers.components.CurrenciesController" scope="tenant">
+		<property name="view" value="/components/currenciesComponent.jsp" />
+	</bean>
+
+	<bean id="BreadcrumbController" class="com.clients.web.controllers.components.BreadcrumbController" scope="tenant">
+		<property name="view" value="/components/breadcrumbComponent.jsp" />
+	</bean>
+	
+	<bean id="CartSummaryComponentController" class="com.clients.web.controllers.components.CartSummaryComponentController" scope="tenant">
+		<property name="view" value="/components/cartSummary.jsp" />
+	</bean>
+
+	<bean id="LoginController" class="com.clients.web.controllers.forms.login.LoginController" scope="request">
+		<property name="commandName" value="LoginInfo" />
+		<property name="commandClass" value="com.clients.web.controllers.forms.login.LoginInfo" />
+		<property name="validator">
+			<bean class="com.clients.web.controllers.forms.login.LoginValidator" />
+		</property>
+		<property name="formView" value="/components/login/loginForm.jsp" />
+	</bean>
+
+	<bean id="LogoutController" class="com.clients.web.controllers.forms.logout.LogoutController" scope="request">
+		<property name="view" value="/components/logout/logoutForm.jsp"/>
+	</bean>
+	
+
+	<bean id="RegistrationController" class="com.clients.web.controllers.forms.registration.RegistrationController"
+		scope="request">
+		<property name="commandName" value="RegistrationInfo" />
+		<property name="commandClass" value="com.clients.web.controllers.forms.registration.RegistrationInfo" />
+		<property name="validator">
+			<bean class="com.clients.web.controllers.forms.registration.RegistrationValidator" />
+		</property>
+		<property name="formView" value="/components/registration/registrationForm.jsp" />
+		<property name="successView" value="/components/registration/registered.jsp" />
+	</bean>
+
+	<bean id="CartController" class="com.clients.web.controllers.forms.cart.CartController" scope="request">
+		<property name="commandName" value="CartItemInfo" />
+		<property name="commandClass" value="com.clients.web.controllers.forms.cart.CartItemInfo" />
+		<property name="validateOnBinding" value="true" />
+		<property name="validator">
+			<bean class="com.clients.web.controllers.forms.cart.CartValidator" />
+		</property>
+	</bean>
+	
+	<bean id="checkout" class="com.clients.web.controllers.forms.checkout.CheckoutWizardController" scope="tenant">
+		<property name="commandName" value="CheckoutItemInfo" />
+		<property name="commandClass" value="com.clients.web.controllers.forms.checkout.CheckoutItemInfo" />
+		<property name="pages">
+			<list>
+				<value>/components/checkout/login.jsp</value>
+				<value>/components/checkout/order.jsp</value>
+			</list>
+		</property>
+		<property name="successView" value="/components/checkout/checkout_success.jsp" />
+	</bean>
+	
+
+	<!-- ############################################################ -->
+	<!-- CMS Page Controllers -->
+	<bean id="abstractPageController" class="com.clients.web.controllers.pages.AbstractPageController" scope="tenant"
+		abstract="true">
+		<property name="views">
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key="default" value="/pages/default.jsp" />
+				<entry key="multitenant_main" value="/pages/main_multitenant.jsp" />
+				<entry key="multitenant_home" value="/pages/home_multitenant.jsp" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="resourcePathProvider" class="com.clients.web.controllers.pages.impl.DefaultResourcePathProvider" scope="tenant" />
+
+	<!-- Content Page Controller -->
+	<bean id="content" class="com.clients.web.controllers.pages.ContentPageController" parent="abstractPageController"
+		scope="tenant" >
+		<property name="pageSourceObjectProvider" ref="contentPageSourceObjectProvider" />
+	</bean>
+
+	<!-- Catalog Page Controller -->
+	<bean id="catalog" class="com.clients.web.controllers.pages.CatalogPageController" parent="abstractPageController"
+		scope="tenant" />
+
+	<!-- Category Page Controller -->
+	<bean id="category" class="com.clients.web.controllers.pages.CategoryPageController" parent="abstractPageController"
+		scope="tenant" >
+		<property name="pageSourceObjectProvider" ref="categoryPageSourceObjectProvider" />
+	</bean>
+
+	<!-- Product Page Controller -->
+	<bean id="product" class="com.clients.web.controllers.pages.ProductPageController" parent="abstractPageController"
+		scope="tenant"  >
+		<property name="pageSourceObjectProvider" ref="productPageSourceObjectProvider" />
+	</bean>
+
+
+	<bean id="productPageSourceObjectProvider" class="com.clients.web.controllers.pages.impl.ProductPageSourceObjectProvider" scope="tenant" />
+	<bean id="categoryPageSourceObjectProvider" class="com.clients.web.controllers.pages.impl.CategoryPageSourceObjectProvider" scope="tenant" />
+	<bean id="contentPageSourceObjectProvider" class="com.clients.web.controllers.pages.impl.ContentPageSourceObjectProvider" scope="tenant" />
+	
+	<!-- ############################################################ -->
+	<!-- CMS Content Element Controllers -->
+
+	<bean id="abstractComponentController" class="com.clients.web.controllers.components.cms2.AbstractCMSComponentController"
+		scope="tenant" abstract="true">
+		<property name="errorView" value="/components/errorView.jsp" />
+	</bean>
+	
+	<!-- Default Content Element Controller. All content elements which do not define their own controller, will be delegated to this one -->
+	<bean id="DefaultCMSComponentController" class="com.clients.web.controllers.components.cms2.DefaultCMSComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="jspBaseDir" value="/components/cms2/" />
+		<property name="fileExtension" value=".jsp"/>
+		<property name="modelService" ref="modelService"/>
+	</bean>
+
+	<!-- Image Content Element Controller -->
+	<bean id="CMSImageComponentController" class="com.clients.web.controllers.components.cms2.CMSImageComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/cMSImageComponent.jsp" />
+	</bean>
+
+	<!-- Promotion Content Element Controller -->
+	<bean id="PromotionComponentController" class="com.clients.web.controllers.components.cms2.PromotionComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/promotionComponent.jsp" />
+	</bean>
+
+	<!-- Link List Content Element Controller -->
+	<bean id="LinkListComponentController" class="com.clients.web.controllers.components.cms2.LinkListComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/linklistComponent.jsp" />
+	</bean>
+
+	<!--  Category Tree Content Element Controller -->
+	<bean id="CategoryTreeComponentController" class="com.clients.web.controllers.components.cms2.CategoryTreeComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/categoryTreeComponent.jsp" />
+	</bean>
+
+	<!--  Rotating image Content Element Controller -->
+	<bean id="RotatingImagesComponentController" class="com.clients.web.controllers.components.cms2.RotatingImagesComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/rotatingImagesComponent.jsp" />
+	</bean>
+
+	<bean id="BannerComponentController" class="com.clients.web.controllers.components.cms2.BannerComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/bannerComponent.jsp" />
+	</bean>
+	
+	<bean id="FlashComponentController" class="com.clients.web.controllers.components.cms2.FlashComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/flashComponent.jsp" />
+	</bean>
+
+	<bean id="ProductListComponentController" class="com.clients.web.controllers.components.cms2.ProductListComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/productListComponent.jsp" />
+	</bean>
+	
+	<bean id="ProductDetailComponentController" class="com.clients.web.controllers.components.cms2.ProductDetailComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/productDetailComponent.jsp" />
+	</bean>
+	
+	<bean id="ProductCarouselComponentController" class="com.clients.web.controllers.components.cms2.ProductCarouselComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/productCarouselComponent.jsp" />
+	</bean>
+
+	<bean id="CartAndWishlistComponentController" class="com.clients.web.controllers.components.cms2.CartAndWishlistComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="views">
+	 		<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key="cart" value="/components/cms2/cartViewComponent.jsp" />
+				<entry key="wishlist" value="/components/cms2/wishlistViewComponent.jsp" />
+			</map>
+	 	</property>
+	</bean>
+
+	<bean id="CatalogListComponentController" class="com.clients.web.controllers.components.cms2.CatalogListComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/catalogListComponent.jsp" />
+	</bean>
+	
+	<bean id="CMSLinkComponentController" class="com.clients.web.controllers.components.cms2.CMSLinkComponentController"
+		parent="abstractComponentController" scope="tenant">
+		<property name="view" value="/components/cms2/cMSLinkComponent.jsp" />
+	</bean>
+
+</beans>

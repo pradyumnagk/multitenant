@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2012 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<project name="multitenant_buildcallbacks" >
+	<property name="local.taglib.jar" value="${ext.multitenant.path}/web/webroot/WEB-INF/lib/${cms2lib.taglib.jar}" />
+	
+	<macrodef name="multitenant_after_build">
+		<sequential>
+			<outofdate>
+				<sourcefiles>
+					<fileset dir="${cms2lib.taglib.dir}" includes="${cms2lib.taglib.jar}" />
+				</sourcefiles>
+				<targetfiles path="${local.taglib.jar}" />
+				<sequential>
+					<echo level="info" message="Copying additional tag libraries from ${cms2lib.base.extension.name} to multitenant" />
+					<copy file="${cms2lib.taglib.dir}/${cms2lib.taglib.jar}" tofile="${local.taglib.jar}" />
+				</sequential>	
+			</outofdate>
+		</sequential>
+	</macrodef>	
+
+</project>

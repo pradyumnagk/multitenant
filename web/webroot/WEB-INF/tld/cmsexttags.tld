@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+	<tlib-version>1.0</tlib-version>
+	<short-name>cmsext</short-name>
+	<uri>/WEB-INF/tld/cmsexttags.tld</uri>
+	<tag>
+		<name>pagination</name>
+		<tag-class>com.clients.web.tags.CMSPaginationTag</tag-class>
+		<body-content>JSP</body-content>
+		<info>Render a pagination bar</info>
+		<attribute>
+			<name>productResult</name>
+			<required>true</required>
+			<description>data object which contains the current ProductResultData</description>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>baseStyleClassName</name>
+			<required>false</required>
+			<description>basic styleclass for formating the pagination bar</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>paginationId</name>
+			<required>true</required>
+			<description>id of this pagination element</description>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>currentURL</name>
+			<required>true</required>
+			<description>The current URL</description>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>strip</name>
+		<tag-class>com.clients.web.tags.CMSStripTextTag</tag-class>
+		<body-content>JSP</body-content>
+		<info>Strip a text to the desired length, using a prefix (or not)</info>
+		<attribute>
+			<name>message</name>
+			<required>true</required>
+			<description>Message to strip</description>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>length</name>
+			<required>false</required>
+			<description>max length of message before it gets stripped. Default 20 chars</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>prefix</name>
+			<required>false</required>
+			<description>Prefix of message if stripped (default ...)</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>usePrefix</name>
+			<required>false</required>
+			<description>if set to false, no prefix will be added to the stripped message. (default: true)</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>error</name>
+		<tag-class>com.clients.web.tags.CMSErrorTag</tag-class>
+		<body-content>JSP</body-content>
+		<info>Gets and sets an error, if no error with the given errorId is found, the inner body of this tag won't be evaluated.</info>
+		<attribute>
+			<name>errorId</name>
+			<required>true</required>
+			<description>id of the error</description>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+			<description>request or page context</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<description>the var name to access the content element</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>removeFromSession</name>
+			<required>false</required>
+			<description>if set to true, the error with the given errorId will be removed from the session</description>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2012 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+
+	<!--
+		WARNING: This is the Spring WEB configuration file. If you want to replace items or managers you have to do this from the
+		extensions core configuration file (multitenant/resources/multitenant-spring.xml)
+	-->
+
+<beans default-autowire="byName" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+	<!--
+		Registering the hybris "tenant" scope This is the custom hybris scope that manages the lifetime of a "tenant". If you do not
+		deal with tenants ("multimandantenfähigkeit"), then there is no need to understand what this is for.
+	-->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="tenant" value="de.hybris.platform.spring.TenantScope"/>
+			</map>
+		</property>
+	</bean>
+
+	<!--  Helpers  -->
+	<bean id="requestHelper" class="com.clients.web.helpers.impl.DefaultRequestHelper" scope="tenant"/>
+
+	<bean id="catalogHelper" class="com.clients.web.helpers.impl.DefaultCatalogHelper" scope="tenant"/>
+
+	<bean id="categoryHelper" class="com.clients.web.helpers.impl.DefaultCategoryHelper" scope="tenant"/>
+
+	<bean id="productHelper" class="com.clients.web.helpers.impl.DefaultProductHelper" scope="tenant"/>
+
+	<bean id="pageHelper" class="com.clients.web.helpers.impl.DefaultPageHelper" scope="tenant"/>
+
+	<bean id="searchHelper" class="com.clients.web.helpers.impl.DefaultSearchHelper" scope="tenant"/>
+
+	<bean id="urlHelper" class="com.clients.web.helpers.impl.DefaultURLHelper" scope="tenant"/>
+
+	<bean id="errorHelper" class="com.clients.web.helpers.impl.DefaultErrorHelper" scope="tenant" />
+
+	<bean id="priceFormatterHelper" class="com.clients.web.helpers.impl.DefaultPriceFormatterHelper" scope="tenant"/>
+
+	<bean id="paginationHelper" class="com.clients.web.helpers.impl.DefaultPaginationHelper" scope="tenant">
+		<property name="paginationSizes" ref="paginationSizes" />
+		<property name="orderKeys" ref="orderKeys" />
+	</bean>
+	
+	<bean id="componentAttrHelper" class="com.clients.web.helpers.impl.DefaultComponentAttrHelper" scope="tenant"/>
+
+	<!-- Facades -->
+	<bean id="productFacade" class="com.clients.web.facades.impl.DefaultProductFacade" scope="tenant" />
+
+	<bean id="categoryFacade" class="com.clients.web.facades.impl.DefaultCategoryFacade" scope="tenant" />
+	
+	<bean id="catalogFacade" class="com.clients.web.facades.impl.DefaultCatalogFacade" scope="tenant" />
+
+	<bean id="searchFacade" class="com.clients.web.facades.impl.DefaultSearchFacade" scope="tenant">
+		<property name="i18nService" ref="i18nService" />
+		<property name="categoryService" ref="categoryService" />
+		<property name="searchPageLabel" value="search" />
+		<property name="facetSearchService" ref="solrFacetSearchService" />
+		<property name="catalogService" ref="catalogService" />
+	</bean>
+
+	<bean id="userFacade" class="com.clients.web.facades.impl.DefaultUserFacade" scope="tenant" />
+
+	<bean id="cartFacade" class="com.clients.web.facades.impl.DefaultCartFacade" scope="tenant" />
+
+	<!-- Converters -->
+	<bean id="bannerConverter" class="com.clients.web.converters.BannerConverter" scope="tenant"/>
+	
+	<bean id="flashBannerConverter" class="com.clients.web.converters.FlashComponentConverter" scope="tenant"/>
+
+	<bean id="categoryConverter" class="com.clients.web.converters.CategoryConverter" scope="tenant"/>
+
+	<bean id="productConverter" class="com.clients.web.converters.ProductConverter" scope="tenant"/>
+
+	<bean id="priceInformationConverter" class="com.clients.web.converters.PriceInformationConverter" scope="tenant"/>
+
+	<bean id="customerReviewConverter" class="com.clients.web.converters.CustomerReviewConverter" scope="tenant"/>
+
+	<bean id="cartConverter" class="com.clients.web.converters.CartConverter" scope="tenant"/>
+
+	<bean id="catalogConverter" class="com.clients.web.converters.CatalogConverter" scope="tenant"/>
+	
+	<bean id="cartEntryConverter" class="com.clients.web.converters.CartEntryConverter" scope="tenant"/>
+
+	<bean id="userConverter" class="com.clients.web.converters.UserConverter" scope="tenant"/>
+
+	<bean id="errorConverter" class="com.clients.web.converters.ErrorConverter" scope="tenant"/>
+	
+	<bean id="wishlistConverter" class="com.clients.web.converters.WishlistConverter" scope="tenant"/>
+	
+	<bean id="wishlistEntryConverter" class="com.clients.web.converters.WishlistEntryConverter" scope="tenant"/>
+
+	<!-- Static configurations for multitenant -->
+	<bean id="paginationSizes" scope="tenant" class="org.springframework.beans.factory.config.ListFactoryBean">
+		<property name="sourceList">
+			<list>
+				<value>5</value> <!-- if you are using a facet search, this value (lowest) has to be the default pageSize in your FSS config -->
+				<value>10</value>
+				<value>20</value>
+				<value>all</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--
+		These order keys are only used for product lists which not come from a search. Product lists using the facetsearch will generate
+		their orderKeys from the configuration
+	-->
+	<bean id="orderKeys" scope="tenant" class="org.springframework.beans.factory.config.ListFactoryBean">
+		<property name="sourceList">
+			<list>
+				<value>name</value>
+				<value>priceValue</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="barcodeUrlResolver" class="com.clients.web.mappings.preview.deeplink.PreviewMultitenantUrlResolver" scope="tenant">
+    	<property name="deeplinkUrlDao" ref="deeplinUrlDao" />
+    	<property name="categoryService" ref="categoryService" />
+    	<property name="productService" ref="productService" />
+  	</bean>
+  	
+  	<bean id="deeplinkUrlService" class="de.hybris.platform.deeplink.services.impl.DeeplinkUrlServiceImpl" scope="tenant">
+		<property name="resolver" ref="barcodeUrlResolver" />
+		<property name="deeplinkUrlDao" ref="deeplinUrlDao" />
+		<property name="typeService" ref="typeService" />
+	</bean>
+  	
+</beans>

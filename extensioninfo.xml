@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2012 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+   <extension  name="multitenant"
+               abstractclassprefix="Generated"
+               classprefix="Multitenant"
+               managername="MultitenantManager"
+               managersuperclass="de.hybris.platform.jalo.extension.Extension"
+	           description="multitenant extension"
+               >
+               
+      <requires-extension name="cms2" version="4.6.0-SNAPSHOT"/>
+      <requires-extension name="cms2lib" version="4.6.0-SNAPSHOT"/>
+      <requires-extension name="wishlist" version="4.6.0-SNAPSHOT"/>
+      <requires-extension name="customerreview" version="4.6.0-SNAPSHOT"/>
+      <requires-extension name="promotions" version="4.6.0-SNAPSHOT"/>
+      <requires-extension name="solrfacetsearch" version="4.6.0-SNAPSHOT"/>
+      <requires-extension name="btg" version="4.6.0-SNAPSHOT"/>
+
+      <coremodule	packageroot="com.clients"
+					manager="com.clients.jalo.MultitenantManager"
+					generated="true" 
+					/>
+
+      <webmodule	jspcompile="false" 
+					webroot="/multitenant"
+					/>
+
+      <hmcmodule	extensionclassname="com.clients.hmc.MultitenantHMCExtension"
+					/>
+
+   </extension>
+      
+</extensioninfo>

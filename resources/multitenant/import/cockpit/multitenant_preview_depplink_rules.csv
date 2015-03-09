@@ -1,0 +1,11 @@
+#Create Deeplink
+INSERT_UPDATE DeeplinkUrl;code[unique=true];name;baseUrl
+;preview_multitenant;Multitenant preview deeplink;http://localhost:9001/multitenant
+#Create Deeplink rules
+INSERT_UPDATE DeeplinkUrlRule; baseUrlPattern[unique=true];destUrlTemplate[unique=true];applicableType(code)[unique=true];useForward;priority
+;.*/multitenant.*;/view/content/$ctx.labelOrId;ContentPage;false;1;
+;.*/multitenant.*;/view/catalog/$ctx.catalogId;CatalogPage;false;1;
+;.*/multitenant.*;/view/category/$ctx.catalogId/#foreach( $category in $ctx.categoryPathId )$category/#end;CategoryPage;false;1;
+;.*/multitenant.*;/view/product/$ctx.catalogId/#foreach( $category in $ctx.categoryPathId )$category/#end$ctx.productCode;ProductPage;false;1;
+
+

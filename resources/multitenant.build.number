@@ -1,0 +1,9 @@
+#Ant properties
+#Wed Apr 04 19:41:03 CEST 2012
+builddate=20120404 1920
+description=multitenant
+name=multitenant
+releasedate=20120404 1920
+revision=60297
+vendor=hybris
+version=4.6.0

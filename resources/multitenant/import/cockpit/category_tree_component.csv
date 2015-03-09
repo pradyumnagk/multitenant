@@ -1,0 +1,7 @@
+$catalog-id=multitenant_content
+$catalog-Staged=Staged
+$contentCV=catalogVersion(catalog(id[default=$catalog-id]),version[default=$catalog-Staged])[default=$catalog-id:$catalog-Staged]
+
+#Create CategoryTreeElement
+INSERT_UPDATE CategoryTreeComponent;$contentCV[unique=true];uid[unique=true];name;visible;useFacets;
+;;st_categoryTree;Multitenant Category Tree;true;true;

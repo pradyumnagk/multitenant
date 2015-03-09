@@ -1,0 +1,5 @@
+<decorators defaultdir="/decorators">
+    <decorator name="main" page="main.jsp">
+          <pattern>/view/checkout</pattern>
+    </decorator>
+</decorators>

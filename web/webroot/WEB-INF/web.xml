@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<web-app id="multitenant" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>multitenant</display-name>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+
+<!--
+	Filter that will do initialization work for each web application which include:
+	- Getting the JaloSession from the HttpSession or, if not available, create a new JaloSession 
+ 	- Activate this JaloSession so that calls to JaloSession.getCurrentSession() can be performed.
+ 	- Iterate through all managers and call the doPreRequest(..) method.
+-->
+	<filter>
+		<filter-name>InitFilter</filter-name>
+		<filter-class>de.hybris.platform.util.HybrisInitFilter</filter-class>
+		<!-- GZIP compression of response (default = true) -->
+		<init-param>
+			<param-name>enable.compression</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>tenantIDPattern</param-name>
+			<param-value>;\s*tenantID\s*=\s*(\w+)</param-value>
+		</init-param>
+	</filter>
+	
+	<filter>
+		<filter-name>CMSSiteFilter</filter-name>
+		<filter-class>com.clients.web.servlets.CMSSiteFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>ProductVisitedBTGRuleDataFilter</filter-name>
+		<filter-class>com.clients.web.servlets.ProductVisitedBTGRuleDataFilter</filter-class>
+		<init-param>
+			<param-name>PageSourceObjectProviderBean</param-name>
+			<param-value>productPageSourceObjectProvider</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ResourcePathProviderBean</param-name>
+			<param-value>resourcePathProvider</param-value>
+		</init-param>		
+	</filter>
+
+	<filter>
+		<filter-name>CategoryVisitedBTGRuleDataFilter</filter-name>
+		<filter-class>com.clients.web.servlets.CategoryVisitedBTGRuleDataFilter</filter-class>
+		<init-param>
+			<param-name>PageSourceObjectProviderBean</param-name>
+			<param-value>categoryPageSourceObjectProvider</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ResourcePathProviderBean</param-name>
+			<param-value>resourcePathProvider</param-value>
+		</init-param>
+	</filter>
+ 
+	<filter>
+		<filter-name>ContentPageVisitedBTGRuleDataFilter</filter-name>
+		<filter-class>com.clients.web.servlets.ContentPageVisitedBTGRuleDataFilter</filter-class>
+		<init-param>
+			<param-name>PageSourceObjectProviderBean</param-name>
+			<param-value>contentPageSourceObjectProvider</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ResourcePathProviderBean</param-name>
+			<param-value>resourcePathProvider</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>RequestParametersUsedBTGRuleDataFilter</filter-name>
+		<filter-class>com.clients.web.servlets.RequestParametersUsedBTGRuleDataFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>RefererHeaderValueBTGRuleDataFilter</filter-name>
+		<filter-class>com.clients.web.servlets.RefererHeaderValueBTGRuleDataFilter</filter-class>
+	</filter>
+
+	<filter>
+		<filter-name>BTGSegmentFilter</filter-name>
+		<filter-class>com.clients.web.servlets.BTGSegmentFilter</filter-class>
+	</filter>
+
+	<filter>
+	    <filter-name>sitemesh</filter-name>
+	    <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>InitFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CMSSiteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CMSSiteFilter</filter-name>
+		<url-pattern>/previewServlet</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>ProductVisitedBTGRuleDataFilter</filter-name>
+		<url-pattern>/view/product/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>CategoryVisitedBTGRuleDataFilter</filter-name>
+		<url-pattern>/view/category/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>ContentPageVisitedBTGRuleDataFilter</filter-name>
+		<url-pattern>/view/content/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>
+			<!-- 
+				Handles default "home page" mechanism 
+				which uses jsp:include standard action 
+			-->
+			INCLUDE
+		</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>RequestParametersUsedBTGRuleDataFilter</filter-name>
+		<url-pattern>/view/*</url-pattern>
+		
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>RefererHeaderValueBTGRuleDataFilter</filter-name>
+		<url-pattern>/view/*</url-pattern>
+	</filter-mapping> 
+
+	<filter-mapping>
+		<filter-name>BTGSegmentFilter</filter-name>
+		<url-pattern>/view/*</url-pattern>
+	</filter-mapping>
+ 
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/view/*</url-pattern>
+	</filter-mapping>
+	
+<!--
+	Enabling a Spring web application context with 'session' and 'request' scope.
+	- The 'contextConfigLocation' param specifies where your configuration files are located.
+	- The HybrisContextLoaderListener extends the usual SpringContextLoaderListener (which loads
+	  the context from specified location) by adding the global application context of
+	  the platform as parent context. With having the global context set as parent you can access
+	  or override beans of the global context and get the 'tenant' scope.
+	- The RequestContextListener is needed for exposing the 'request' scope to the context.
+	  Furthermore it is needed when overriding the 'jalosession' bean for your web application.
+ -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>WEB-INF/multitenant-web-spring.xml,WEB-INF/springmvc-servlet.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>de.hybris.platform.spring.HybrisContextLoaderListener</listener-class>
+	</listener>
+	
+	<listener>
+    	<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>com.clients.web.servlets.RequestScopedBTGRuleDataServletRequestListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/view/*</url-pattern>
+	</servlet-mapping>
+</web-app> 

@@ -1,0 +1,167 @@
+###############################################################################
+#
+#	Cockpit UI Component configuration import script for Multitenant components
+#
+#	
+#	This file contains Cockpit UI Component configurations for the 
+#	Multitenant types.
+#
+#
+#
+#	Table of Contents
+#	---------------------------------------------------------------------------
+#		i.		Macro definitions
+#	---------------------------------------------------------------------------
+#		1.		Configuration files (media)
+#	---------------------------------------------------------------------------
+#		1.1			List view
+#		1.2			Grid view
+#		1.3			Editor area
+#		1.4			Advanced search
+#		1.5			Base configurations
+#		1.6			CMS Component editor
+#	---------------------------------------------------------------------------
+#		2.		Configuration mappings (principal, type, context code)
+#	---------------------------------------------------------------------------
+#		2.1			List view
+#		2.1.1		- Browser
+#		2.1.2		- Context area
+#		2.1.3		- Reference selector dialog
+#		2.2			Grid view
+#		2.3			Editor area
+#		2.4			Advanced search
+#		2.5			Base configurations
+#		2.6			CMS Component editor
+#
+#
+###############################################################################
+
+
+###############################################################################
+#	i. Macro definitions
+###############################################################################
+
+
+###############################################################################
+#
+#	1. Configuration files (media)
+#
+###############################################################################
+
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+
+
+###############################################################################
+#	1.1 List view
+###############################################################################
+
+;list_categorytreecomponent_cockpitgroup_ui_config;text/xml; ListView_CategoryTreeComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/ListView_CategoryTreeComponent_CockpitGroup.xml
+;list_cataloglistcomponent_cockpitgroup_ui_config;text/xml; ListView_CatalogListComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/ListView_CatalogListComponent_CockpitGroup.xml
+
+
+###############################################################################
+#	1.2 Grid view
+###############################################################################
+
+# add stuff
+
+
+###############################################################################
+#	1.3 Editor area
+###############################################################################
+
+;editor_cataloglistcomponent_cockpitgroup_ui_config;text/xml; Editor_CatalogListComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/Editor_CatalogListComponent_CockpitGroup.xml
+;editor_categorytreecomponent_cockpitgroup_ui_config;text/xml; Editor_CategoryTreeComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/Editor_CategoryTreeComponent_CockpitGroup.xml
+;editor_cartandwishlistcomponent_cockpitgroup_ui_config;text/xml; Editor_CartAndWishlistComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/Editor_CartAndWishlistComponent_CockpitGroup.xml
+;editor_promotioncomponent_cockpitgroup_ui_config;text/xml; Editor_PromotionComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/Editor_PromotionComponent_CockpitGroup.xml
+;editor_linklistcomponent_cockpitgroup_ui_config;text/xml; Editor_LinkListComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/Editor_LinkListComponent_CockpitGroup.xml
+
+###############################################################################
+#	1.4 Advanced search
+###############################################################################
+
+# add stuff
+
+
+###############################################################################
+#	1.5 Base configurations
+###############################################################################
+
+;base_promotion_version_ui_config;text/xml; Base_ProductPromotion.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/Base_ProductPromotion.xml
+
+
+###############################################################################
+#	1.6 CMS Component editor
+###############################################################################
+
+;contentedit_promotioncomponent_cockpitgroup_ui_config;text/xml; ContentEdit_PromotionComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/ContentEdit_PromotionComponent_CockpitGroup.xml
+;contentedit_linklistcomponent_cockpitgroup_ui_config;text/xml; ContentEdit_LinkListComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/ContentEdit_LinkListComponent_CockpitGroup.xml
+;contentedit_cartsummary_cockpitgroup_ui_config;text/xml; ContentEdit_CartSummaryComponent_CockpitGroup.xml; jar:com.clients.jalo.MultitenantManager&/multitenant/import/cockpit/config/ContentEdit_CartSummaryComponent_CockpitGroup.xml
+
+
+
+
+
+###############################################################################
+#
+#	2. Configuration mappings (principal, type, context code)
+#
+###############################################################################
+
+INSERT_UPDATE CockpitUIComponentConfiguration;code[unique=true];factoryBean;objectTemplateCode[unique=true];principal(uid)[unique=true];media(code);
+
+
+###############################################################################
+#	2.1 List view
+###############################################################################
+
+# 	2.1.1 Browser
+;listViewContentBrowser;listViewConfigurationFactory;CatalogListComponent;cockpitgroup;list_cataloglistcomponent_cockpitgroup_ui_config;
+;listViewContentBrowser;listViewConfigurationFactory;CategoryTreeComponent;cockpitgroup;list_categorytreecomponent_cockpitgroup_ui_config;
+
+# 	2.1.2 Context area
+# add stuff
+
+# 	2.1.3 Reference selector dialog
+# add stuff
+
+
+###############################################################################
+#	2.2 Grid view
+###############################################################################
+
+# add stuff
+
+
+###############################################################################
+#	2.3 Editor area
+###############################################################################
+
+;editorArea;editorConfigurationFactory;PromotionComponent;cockpitgroup;editor_promotioncomponent_cockpitgroup_ui_config;
+;editorArea;editorConfigurationFactory;LinkListComponent;cockpitgroup;editor_linklistcomponent_cockpitgroup_ui_config;
+;editorArea;editorConfigurationFactory;CatalogListComponent;cockpitgroup;editor_cataloglistcomponent_cockpitgroup_ui_config;
+;editorArea;editorConfigurationFactory;CategoryTreeComponent;cockpitgroup;editor_categorytreecomponent_cockpitgroup_ui_config;
+;editorArea;editorConfigurationFactory;CartAndWishlistComponent;cockpitgroup;editor_cartandwishlistcomponent_cockpitgroup_ui_config;
+
+
+###############################################################################
+#	2.4 Advanced search
+###############################################################################
+
+# add stuff
+
+
+###############################################################################
+#	2.5 Base configurations
+###############################################################################
+
+;base;baseConfigurationFactory;ProductPromotion;;base_promotion_version_ui_config;
+
+
+###############################################################################
+#	2.6 CMS Component editor
+###############################################################################
+
+;contentEditor;contentEditorConfigurationFactory;PromotionComponent;cockpitgroup;contentedit_promotioncomponent_cockpitgroup_ui_config;
+;contentEditor;contentEditorConfigurationFactory;LinkListComponent;cockpitgroup;contentedit_linklistcomponent_cockpitgroup_ui_config;
+;contentEditor;contentEditorConfigurationFactory;CartSummaryComponent;cockpitgroup;contentedit_cartsummary_cockpitgroup_ui_config;

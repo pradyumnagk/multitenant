@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2012 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<enumtypes>
+		<enumtype generate="true" code="CartAndWishlistModes1" autocreate="true" jaloclass="de.hybris.platform.jalo.enumeration.EnumerationValue">
+			<value code="cart" />
+			<value code="wishlist" />
+		</enumtype>
+	</enumtypes>
+
+	<relations>
+
+		<relation code="CatalogsForCatalogListComponent1" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="catalogListComponent1" type="CatalogListComponent1" cardinality="many">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="catalogs" type="Catalog" cardinality="many" collectiontype="list" ordered="true">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="LinksForListComponent1" generate="true" localized="false" autocreate="true">
+			<sourceElement qualifier="linkListComponent1" type="LinkListComponent1" cardinality="many">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</sourceElement>
+			<targetElement qualifier="links" type="CMSLinkComponent" cardinality="many" collectiontype="list" ordered="true">
+				<modifiers read="true" write="true" search="true" optional="true" />
+			</targetElement>
+		</relation>
+
+	</relations>
+
+	<itemtypes>
+		<itemtype code="CategoryTreeComponent1" generate="true" jaloclass="com.clients.jalo.cms2.components.CategoryTreeComponent"
+			extends="SimpleCMSComponent" autocreate="true">
+			<attributes>
+				<attribute type="boolean" qualifier="useFacets">
+					<description>
+						If set to true and a FacetSearch is assigned to the current catalogversion,
+						the element will use facets as navigation. If no FacetSearchItem is available for
+						the current catalogversion, it will fallback to the category tree navigation.
+					</description>
+					<modifiers read="true" write="true" search="false" optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		
+
+		<itemtype code="CartAndWishlistComponent1" generate="true" extends="SimpleCMSComponent" autocreate="true"
+			jaloclass="com.clients.jalo.cms2.components.CartAndWishlistComponent">
+			<attributes>
+				<attribute qualifier="mode" generate="true" autocreate="true" type="CartAndWishlistModes">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true" optional="false" initial="false" unique="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="CatalogListComponent1" generate="true" extends="SimpleCMSComponent" autocreate="true"
+			jaloclass="com.clients.jalo.cms2.components.CatalogListComponent">
+			<attributes>
+				<attribute type="boolean" qualifier="useCatalogsOfStore">
+					<modifiers read="true" write="true" search="false" optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="PromotionComponent1" generate="true" jaloclass="com.clients.jalo.cms2.components.PromotionComponent"
+			extends="SimpleCMSComponent" autocreate="true">
+			<attributes>
+				<attribute qualifier="promotion" type="ProductPromotion">
+					<modifiers read="true" write="true" search="true" initial="false" optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="LinkListComponent1" generate="true" extends="SimpleCMSComponent" autocreate="true"
+			jaloclass="com.clients.jalo.cms2.components.LinkListComponent">
+			<attributes>
+				<attribute qualifier="columns" type="java.lang.Integer">
+					<defaultvalue>1</defaultvalue>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="CartSummaryComponent1" generate="true" extends="SimpleCMSComponent" autocreate="true"
+			jaloclass="com.clients.jalo.cms2.components.CartSummaryComponent">
+			<attributes>
+				<attribute qualifier="cartTitle" type="localized:java.lang.String" generate="true" autocreate="true">
+					<persistence type="property"/>
+				</attribute>				
+				<attribute qualifier="suplementaryText" type="localized:java.lang.String" generate="true" autocreate="true">
+					<persistence type="property"/>
+				</attribute>
+				<attribute qualifier="cartImage" type="Media" generate="true" autocreate="true">
+					<persistence type="property"/>
+				</attribute>
+				<attribute type="boolean" qualifier="enabled" >
+					<persistence type="jalo" />
+					<modifiers write="false"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+	</itemtypes>
+
+
+</items>

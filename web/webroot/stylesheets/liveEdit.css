@@ -1,0 +1,104 @@
+.clearfix:after {
+	content: ".";
+	display: block; 
+	height: 0;
+	/*clear: both;*/
+	visibility: hidden;
+}
+
+.clearfix {display: inline-table;}
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+
+
+.categoryTreeNavigation {
+	width: 180px;
+	border-bottom: 1px dashed #4974b8;
+	padding: 0 6px 6px 6px;
+	margin: 0 10px 15px 0;
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.slide {
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.recentCampaign {
+	margin: 0 5px 6px 0;
+	float: left;
+	width: 273px;
+	overflow: hidden;
+	height: 233px;
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.content{
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.productListElement{
+	margin-top: 5px;
+	border: 1px solid red;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.promotionComponent{
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.productBigGridItem {
+	float:left;
+	width: 272px;
+	margin: 0 5px 10px 0;
+	background-color: #eee;
+	overflow: hidden;
+	margin-right: 5px;
+}
+
+.productBigGridItemImage {
+	width: 272px;
+	height: 274px;
+	overflow: hidden;
+	border: 1px dotted #DDDDDD;
+}
+
+.specialBox {
+	width: 180px;
+	border-bottom: 1px dashed #999;
+	padding: 0 6px 6px 6px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.bottomCatalogList {
+	width:300px;	
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.cartView, .productCarousel, .flashElement, .bigTeaser {
+	border: 1px solid red;
+	cursor: pointer;
+}
+
+.linklist{
+	border: 1px solid red;
+	cursor: pointer;
+	margin: 5px 0 0 0;
+}
+
+.navigationComponent{
+	border: 1px solid red;
+	cursor: pointer;
+	margin: 5px 0 0 0;
+	padding: 3px;
+	height: 20px;
+}

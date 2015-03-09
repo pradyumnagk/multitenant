@@ -1,0 +1,41 @@
+/**
+ * Stylesheet used by default template layout (default.jsp)
+ *
+ */
+#default-template-main-container { 
+	border: 1px solid #325192;
+	margin: 5px;
+}
+
+#default-template-header {
+	color: white;
+	font-size: large;
+	font-weight: bold;
+	line-height: 110%; 
+	background-color: #325192;
+	padding: 5px 10px 5px 10px;
+}
+#default-template-header-icon {
+	width: 9%;
+	float: left;
+}
+#default-template-header-msg {
+	width: 89%;
+	float: left;
+	padding-top: 10px;
+	padding-left: 10px;
+} 
+.default-template-content-slot {
+	clear: both; 
+	border: 1px solid #325192;
+}
+.default-template-content-slot-header {
+	border-bottom: 1px solid gray;
+	padding: 8px;
+	font-size: 15px;
+	font-weight: bold;
+}
+.default-template-component {
+	clear: both; 
+	margin: 6px;
+}

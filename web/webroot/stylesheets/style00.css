@@ -1,0 +1,18 @@
+body { 
+	color: #444;
+	background: #eee url(images_00/bodyBG.jpg) no-repeat;
+} 
+
+.mainnav li a {
+	color: #777;
+}
+
+.metanav a {
+	color: #777;
+}
+
+.defaultSubmit {
+	background-color: #ccc;
+	background-image: none;
+	border: 1px solid #fff;
+}

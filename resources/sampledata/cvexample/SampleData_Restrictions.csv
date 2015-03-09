@@ -1,0 +1,49 @@
+$catalog-id=multitenant_content
+$catalog-Staged=Staged
+
+$contentCV=catalogVersion(catalog(id[default=$catalog-id]),version[default=$catalog-Staged])[default=$catalog-id:$catalog-Staged]
+$media=media(media,catalogversion(catalog(id[default=$catalog-id]),version[default=$catalog-Staged]))[default=$catalog-id:$catalog-Staged]
+
+#Some media for the imagecomponents
+INSERT_UPDATE Media;$contentCV;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];
+;;banner_time;image/jpg;timerestriction.gif;jar:/sampledata/cvexample/media/timerestriction.gif;
+;;banner_user;image/jpg;userrestriction.gif;jar:/sampledata/cvexample/media/userrestriction.gif;
+;;banner_usergroup;image/jpg;usergrouprestriction.gif;jar:/sampledata/cvexample/media/usergrouprestriction.gif;
+
+#Create a time restriction
+INSERT_UPDATE CMSTimeRestriction;$contentCV[unique=true];uid[unique=true];name;activeFrom[dateformat='yyyy-MM-dd''T''HH:mm:ss'];activeUntil[dateformat='yyyy-MM-dd''T''HH:mm:ss'];
+;;christmas_time_restriction;Christmas Time Restriction;"2009-12-24T00:00:00";"2009-12-31T00:00:00";
+
+#Create a user restriction
+INSERT_UPDATE CMSUserRestriction;$contentCV[unique=true];uid[unique=true];name;users(uid);
+;;user_restriction;Anonymous Restriction;anonymous;
+
+#Create a usergroup
+INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=append]
+;vipgroup;;
+
+#Add user demo to vipgroup
+INSERT_UPDATE Customer;UID[unique=true];groups(uid);
+;demo;customergroup,vipgroup;
+
+#Create a usergroup restriction
+INSERT_UPDATE CMSUserGroupRestriction;$contentCV[unique=true];uid[unique=true];name;userGroups(uid);
+;;vipgroup_restriction;VIP Group Restriction;vipgroup;
+
+#Some CMSImageComponents
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];name;visible;media(code)[lang=de];media(code)[lang=en];restrictions(uid,$contentCV);
+;;time_rest_image;A time restricted Image;true;banner_time;banner_time;christmas_time_restriction;
+;;user_rest_image;A user restricted Image;true;banner_user;banner_user;user_restriction;
+;;group_rest_image;A group restricted Image;true;banner_usergroup;banner_usergroup;vipgroup_restriction;
+
+#Create a content page
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;label;masterTemplate(uid,$contentCV);defaultPage;
+;;restrictionpage;Restriction Page;rest;multitenant_main;true;
+
+#Content Slot for this page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV);
+;;st_restrictionpage_main;Main Content Slot;true;time_rest_image,user_rest_image,group_rest_image;
+
+#Bind Content Slot to page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true];
+;;csfprestricionpagemain;main;restrictionpage;st_restrictionpage_main;
